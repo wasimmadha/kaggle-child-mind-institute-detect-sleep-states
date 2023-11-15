@@ -30,7 +30,7 @@ def load_model(cfg: InferenceConfig) -> BaseModel:
     # load weights
     if cfg.weight is not None:
         weight_path = (
-            '/kaggle/input/models-pth-files/lstm_bs32.pth'
+            '/kaggle/input/models-pth-files/lstm_12hours.pth'
         )
         model.load_state_dict(torch.load(weight_path))
         print('load weight from "{}"'.format(weight_path))
@@ -55,7 +55,6 @@ def get_test_dataloader(cfg: InferenceConfig) -> DataLoader:
         processed_dir=Path(cfg.dir.processed_dir),
         phase=cfg.phase,
     )
-    print(chunk_features.keys())
     test_dataset = get_test_ds(cfg, chunk_features=chunk_features)
     test_dataloader = DataLoader(
         test_dataset,
