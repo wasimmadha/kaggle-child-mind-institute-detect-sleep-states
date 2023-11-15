@@ -55,6 +55,7 @@ def get_test_dataloader(cfg: InferenceConfig) -> DataLoader:
         processed_dir=Path(cfg.dir.processed_dir),
         phase=cfg.phase,
     )
+    print(chunk_features.keys())
     test_dataset = get_test_ds(cfg, chunk_features=chunk_features)
     test_dataloader = DataLoader(
         test_dataset,
