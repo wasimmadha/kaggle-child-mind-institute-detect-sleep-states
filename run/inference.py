@@ -80,6 +80,7 @@ def inference(
         with torch.no_grad():
             with torch.cuda.amp.autocast(enabled=use_amp):
                 x = batch["feature"].to(device)
+                print("Batch features", x)
                 output = model.predict(
                     x,
                     org_duration=duration,
