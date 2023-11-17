@@ -120,7 +120,9 @@ def main(cfg: InferenceConfig):
 
     with trace("inference"):
         keys, preds = inference(cfg.duration, test_dataloader, model, device, use_amp=cfg.use_amp)
-
+        print(keys)
+        print(preds)
+        
     with trace("make submission"):
         sub_df = make_submission(
             keys,
@@ -128,6 +130,7 @@ def main(cfg: InferenceConfig):
             score_th=cfg.pp.score_th,
             distance=cfg.pp.distance,
         )
+        print(sub_df.shape)
     sub_df.write_csv(Path(cfg.dir.sub_dir) / "submission.csv")
 
 
