@@ -56,7 +56,6 @@ def get_test_dataloader(cfg: InferenceConfig) -> DataLoader:
         phase=cfg.phase,
     )
     test_dataset = get_test_ds(cfg, chunk_features=chunk_features)
-    print(len(test_dataset))
     test_dataloader = DataLoader(
         test_dataset,
         batch_size=cfg.batch_size,
@@ -80,7 +79,6 @@ def inference(
         with torch.no_grad():
             with torch.cuda.amp.autocast(enabled=use_amp):
                 x = batch["feature"].to(device)
-                print("Batch features", x)
                 output = model.predict(
                     x,
                     org_duration=duration,
@@ -123,18 +121,14 @@ def main(cfg: InferenceConfig):
 
     with trace("inference"):
         keys, preds = inference(cfg.duration, test_dataloader, model, device, use_amp=cfg.use_amp)
-        print(keys)
-        print(preds)
 
     with trace("make submission"):
-        print(len(preds))
         sub_df = make_submission(
             keys,
             preds,
             score_th=cfg.pp.score_th,
             distance=cfg.pp.distance,
         )
-        print(sub_df.shape)
     sub_df.write_csv(Path(cfg.dir.sub_dir) / "submission.csv")
 
 
