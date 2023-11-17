@@ -56,6 +56,7 @@ def get_test_dataloader(cfg: InferenceConfig) -> DataLoader:
         phase=cfg.phase,
     )
     test_dataset = get_test_ds(cfg, chunk_features=chunk_features)
+    print(len(test_dataset))
     test_dataloader = DataLoader(
         test_dataset,
         batch_size=cfg.batch_size,
@@ -122,8 +123,9 @@ def main(cfg: InferenceConfig):
         keys, preds = inference(cfg.duration, test_dataloader, model, device, use_amp=cfg.use_amp)
         print(keys)
         print(preds)
-        
+
     with trace("make submission"):
+        print(len(preds))
         sub_df = make_submission(
             keys,
             preds,
