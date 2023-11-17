@@ -27,6 +27,7 @@ def post_process_for_seg(
         for i, event_name in enumerate(["onset", "wakeup"]):
             this_event_preds = this_series_preds[:, i]
             steps = find_peaks(this_event_preds, height=score_th, distance=distance)[0]
+            print(steps)
             scores = this_event_preds[steps]
 
             for step, score in zip(steps, scores):
