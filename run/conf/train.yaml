@@ -4,7 +4,7 @@ hydra:
     name: train
     chdir: true
   run:
-    dir: ${dir.output_dir}/${hydra.job.name}/${exp_name}/single
+    dir: ${dir.output_dir}/${hydra.job.name}/${exp_name}
   sweep:
     dir: ${dir.output_dir}/${hydra.job.name}/${exp_name}
     subdir: run${hydra.job.num}
@@ -22,7 +22,7 @@ seed: 42
 exp_name: dummy
 batch_size: 16
 num_workers: 24
-duration: 5760 # duration * 5 = 秒数
+duration: 8640 # duration * 5 = 秒数
 downsample_rate: 2
 upsample_rate: 1
 
