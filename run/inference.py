@@ -30,7 +30,7 @@ def load_model(cfg: InferenceConfig) -> BaseModel:
     # load weights
     if cfg.weight is not None:
         weight_path = (
-            '/kaggle/input/models-pth-files/lstm_12hours.pth'
+            '/kaggle/input/models-pth-files/lstm_12hours_conv.pth'
         )
         model.load_state_dict(torch.load(weight_path))
         print('load weight from "{}"'.format(weight_path))
