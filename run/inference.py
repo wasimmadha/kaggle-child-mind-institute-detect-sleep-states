@@ -152,8 +152,8 @@ def make_submission(
     keys: list[str], preds: np.ndarray, score_th, distance
 ) -> pl.DataFrame:
     sub_df = post_process_for_seg(
-        keys,
-        preds,  # type: ignore
+        np.array(keys),
+        np.array(preds),  # type: ignore
         score_th=score_th,
         distance=distance,  # type: ignore
     )
