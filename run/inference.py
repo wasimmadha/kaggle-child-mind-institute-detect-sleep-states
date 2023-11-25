@@ -17,7 +17,26 @@ from src.utils.common import nearest_valid_size, trace
 from src.utils.post_process import post_process_for_seg
 
 
-def load_model(cfg: InferenceConfig) -> BaseModel:
+# def load_model(cfg: InferenceConfig) -> BaseModel:
+#     num_timesteps = nearest_valid_size(int(cfg.duration * cfg.upsample_rate), cfg.downsample_rate)
+#     model = get_model(
+#         cfg,
+#         feature_dim=len(cfg.features),
+#         n_classes=len(cfg.labels),
+#         num_timesteps=num_timesteps // cfg.downsample_rate,
+#         test=True,
+#     )
+
+#     # load weights
+#     if cfg.weight is not None:
+#         weight_path = (
+#             '/kaggle/input/models-pth-files/unetunetplusplus.pth'
+#         )
+#         model.load_state_dict(torch.load(weight_path))
+#         print('load weight from "{}"'.format(weight_path))
+#     return model
+
+def load_model(cfg: InferenceConfig, model_path) -> BaseModel:
     num_timesteps = nearest_valid_size(int(cfg.duration * cfg.upsample_rate), cfg.downsample_rate)
     model = get_model(
         cfg,
@@ -30,7 +49,7 @@ def load_model(cfg: InferenceConfig) -> BaseModel:
     # load weights
     if cfg.weight is not None:
         weight_path = (
-            '/kaggle/input/models-pth-files/unetunetplusplus.pth'
+            model_path
         )
         model.load_state_dict(torch.load(weight_path))
         print('load weight from "{}"'.format(weight_path))
@@ -67,33 +86,67 @@ def get_test_dataloader(cfg: InferenceConfig) -> DataLoader:
     return test_dataloader
 
 
+# def inference(
+#     duration: int, loader: DataLoader, model: BaseModel, device: torch.device, use_amp
+# ) -> tuple[list[str], np.ndarray]:
+#     model = model.to(device)
+#     model.eval()
+
+#     preds = []
+#     keys = []
+#     for batch in tqdm(loader, desc="inference"):
+#         with torch.no_grad():
+#             with torch.cuda.amp.autocast(enabled=use_amp):
+#                 x = batch["feature"].to(device)
+#                 output = model.predict(
+#                     x,
+#                     org_duration=duration,
+#                 )
+#             if output.preds is None:
+#                 raise ValueError("output.preds is None")
+#             else:
+#                 key = batch["key"]
+#                 preds.append(output.preds.detach().cpu().numpy())
+#                 keys.extend(key)
+
+#     preds = np.concatenate(preds)
+
+#     return keys, preds  # type: ignore
+
 def inference(
-    duration: int, loader: DataLoader, model: BaseModel, device: torch.device, use_amp
+    duration: int, loader: DataLoader, models: BaseModel, device: torch.device, use_amp
 ) -> tuple[list[str], np.ndarray]:
-    model = model.to(device)
-    model.eval()
+    preds_accumulated = None
+    for model in models:
+        model = model.to(device)
+        model.eval()
 
-    preds = []
-    keys = []
-    for batch in tqdm(loader, desc="inference"):
-        with torch.no_grad():
-            with torch.cuda.amp.autocast(enabled=use_amp):
-                x = batch["feature"].to(device)
-                output = model.predict(
-                    x,
-                    org_duration=duration,
-                )
-            if output.preds is None:
-                raise ValueError("output.preds is None")
-            else:
-                key = batch["key"]
-                preds.append(output.preds.detach().cpu().numpy())
-                keys.extend(key)
+        preds = []
+        keys = []
+        for batch in loader:
+            with torch.no_grad():
+                with torch.cuda.amp.autocast(enabled=use_amp):
+                    x = batch["feature"].to(device)
+                    output = model.predict(
+                        x,
+                        org_duration=duration,
+                    )
+                if output.preds is None:
+                    raise ValueError("output.preds is None")
+                else:
+                    key = batch["key"]
+                    preds.append(output.preds.detach().cpu().numpy())
+                    keys.extend(key)
 
-    preds = np.concatenate(preds)
+        preds = np.concatenate(preds)
 
-    return keys, preds  # type: ignore
+        if preds_accumulated is None:
+            preds_accumulated = preds
+        else:
+            preds_accumulated += preds
 
+    preds = preds_accumulated / len(models)
+    return preds, keys
 
 def make_submission(
     keys: list[str], preds: np.ndarray, score_th, distance
@@ -116,11 +169,16 @@ def main(cfg: InferenceConfig):
     with trace("load test dataloader"):
         test_dataloader = get_test_dataloader(cfg)
     with trace("load model"):
-        model = load_model(cfg)
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        model1 = load_model(cfg, '/kaggle/input/models-pth-files/lstm_12hr_6f_kfold1.pth')
+        model2 = load_model(cfg, '/kaggle/input/models-pth-files/lstm_12hr_6f_kfold2.pth')
+        model3 = load_model(cfg, '/kaggle/input/models-pth-files/lstm_12hr_6f_kfold3.pth')
+        model4 = load_model(cfg, '/kaggle/input/models-pth-files/lstm_12hr_6f_kfold4.pth')
 
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    
+    models = [model1, model2, model3, model4]
     with trace("inference"):
-        keys, preds = inference(cfg.duration, test_dataloader, model, device, use_amp=cfg.use_amp)
+        keys, preds = inference(cfg.duration, test_dataloader, models, device, use_amp=cfg.use_amp)
 
     with trace("make submission"):
         sub_df = make_submission(
