@@ -151,7 +151,6 @@ def inference(
 def make_submission(
     keys: list[str], preds: np.ndarray, score_th, distance
 ) -> pl.DataFrame:
-    print(preds.shape)
     sub_df = post_process_for_seg(
         keys,
         preds,  # type: ignore
