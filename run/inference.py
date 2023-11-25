@@ -146,14 +146,15 @@ def inference(
             preds_accumulated += preds
 
     preds = preds_accumulated / len(models)
-    return preds, keys
+    return keys, preds
 
 def make_submission(
     keys: list[str], preds: np.ndarray, score_th, distance
 ) -> pl.DataFrame:
+    print(preds.shape)
     sub_df = post_process_for_seg(
-        np.array(keys),
-        np.array(preds),  # type: ignore
+        keys,
+        preds,  # type: ignore
         score_th=score_th,
         distance=distance,  # type: ignore
     )
