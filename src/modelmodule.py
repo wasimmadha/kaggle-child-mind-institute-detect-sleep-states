@@ -113,7 +113,7 @@ class PLSleepModel(LightningModule):
         
         if score > self.__best_score:
             val_pred_df.write_csv("val_pred_score_df.csv")
-            torch.save(self.model.state_dict(), "best_model_score.pth")
+            torch.save(self.model.state_dict(), "best_model.pth")
             print(f"Saved best model {self.__best_score} -> {score}")
             self.__best_score = score
 
