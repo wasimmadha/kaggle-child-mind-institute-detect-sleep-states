@@ -14,7 +14,7 @@ defaults:
   - dir: kaggle
   - dataset: seg
   - model: Spec2DCNN
-  - feature_extractor: LSTMFeatureExtractor
+  - feature_extractor: CNNSpectogram
   - decoder: TransformerCNNDecoder
 
 exp_name: dummy
