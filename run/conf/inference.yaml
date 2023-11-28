@@ -14,8 +14,8 @@ defaults:
   - dir: kaggle
   - dataset: seg
   - model: Spec2DCNN
-  - feature_extractor: CNNSpectrogram
-  - decoder: TransformerCNNDecoder
+  - feature_extractor: LSTMFeatureExtractor
+  - decoder: UNet1DDecoder
 
 exp_name: dummy
 phase: test
@@ -41,7 +41,7 @@ aug:
 # post_process
 pp:
   score_th: 0.005
-  distance: 60
+  distance: 40
 
 # label
 labels:
@@ -55,5 +55,5 @@ features:
   - "enmo"
   - "hour_sin"
   - "hour_cos"
-  # - "anglez_sin"
-  # - "anglez_cos"
+  - "anglez_sin"
+  - "anglez_cos"
