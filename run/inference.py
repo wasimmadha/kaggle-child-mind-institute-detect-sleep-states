@@ -115,10 +115,10 @@ def get_test_dataloader(cfg: InferenceConfig) -> DataLoader:
 #     return keys, preds  # type: ignore
 
 def inference(
-    duration: int, loader: DataLoader, models: BaseModel, device: torch.device, use_amp
+    duration: int, loaders, models, device: torch.device, use_amp
 ) -> tuple[list[str], np.ndarray]:
     preds_accumulated = None
-    for model in models:
+    for loader, model in zip(models, loaders):
         model = model.to(device)
         model.eval()
 
@@ -167,17 +167,22 @@ def make_submission(
 def main(cfg: InferenceConfig):
     seed_everything(cfg.seed)
 
-    with trace("load test dataloader"):
-        test_dataloader = get_test_dataloader(cfg)
-    with trace("load model"):
+    with trace("load model and data loader"):
         ## 6 features
         cfg.features = ['anglez', 'enmo', 'hour_sin', 'hour_cos', 'anglez_sin', 'anglez_cos']
         cfg.duration = 5760
         ## 8 hours
         model1 = load_model(cfg, '/kaggle/input/models-pth-files/lstm_6Feat_8hours_kfold1.pth')
+        test_dataloader1 = get_test_dataloader(cfg)
+
         model2 = load_model(cfg, '/kaggle/input/models-pth-files/lstm_6Feat_8hours_kfold2.pth')
+        test_dataloader2 = get_test_dataloader(cfg)
+
         model3 = load_model(cfg, '/kaggle/input/models-pth-files/lstm_6Feat_8hours_kfold3.pth')
+        test_dataloader3 = get_test_dataloader(cfg)
+
         model4 = load_model(cfg, '/kaggle/input/models-pth-files/lstm_6Feat_8hours_kfold4.pth')
+        test_dataloader4 = get_test_dataloader(cfg)
 
         cfg.duration = 8640
         print(cfg.feature_extractor)
@@ -188,15 +193,23 @@ def main(cfg: InferenceConfig):
         cfg.feature_extractor.params['stride'] = cfg.downsample_rate
         
         model5 = load_model(cfg, '/kaggle/input/models-pth-files/lstm_12hr_6f_kfold1.pth')
+        test_dataloader5 = get_test_dataloader(cfg)
+
         model6 = load_model(cfg, '/kaggle/input/models-pth-files/lstm_12hr_6f_kfold2.pth')
+        test_dataloader6 = get_test_dataloader(cfg)
+
         model7 = load_model(cfg, '/kaggle/input/models-pth-files/lstm_12hr_6f_kfold3.pth')
+        test_dataloader7 = get_test_dataloader(cfg)
+
         model8 = load_model(cfg, '/kaggle/input/models-pth-files/lstm_12hr_6f_kfold4.pth')
+        test_dataloader8 = get_test_dataloader(cfg)
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     
     models = [model1, model2, model3, model4, model5, model6, model7, model8]
+    test_dataloaders = [test_dataloader1, test_dataloader2, test_dataloader3, test_dataloader4, test_dataloader5, test_dataloader6, test_dataloader7, test_dataloader8]
     with trace("inference"):
-        keys, preds = inference(cfg.duration, test_dataloader, models, device, use_amp=cfg.use_amp)
+        keys, preds = inference(cfg.duration, test_dataloaders, models, device, use_amp=cfg.use_amp)
 
     with trace("make submission"):
         sub_df = make_submission(
