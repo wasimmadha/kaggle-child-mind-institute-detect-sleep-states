@@ -179,6 +179,7 @@ def main(cfg: InferenceConfig):
         model4 = load_model(cfg, '/kaggle/input/models-pth-files/lstm_6Feat_8hours_kfold4.pth')
 
         cfg.duration = 8640
+        cfg.feature_extractor = 'LSTMConvFeatureExtractor'
         cfg.feature_extractor.params['hidden_size'] = 64
         cfg.feature_extractor.params['num_layers'] = 2
 

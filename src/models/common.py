@@ -13,13 +13,14 @@ from src.models.decoder.unet1ddecoder import UNet1DDecoder
 from src.models.detr2D import DETR2DCNN
 from src.models.feature_extractor.cnn import CNNSpectrogram
 from src.models.feature_extractor.lstm import LSTMFeatureExtractor
+from src.models.feature_extractor.lstm_conv import LSTMConvFeatureExtractor
 from src.models.feature_extractor.panns import PANNsFeatureExtractor
 from src.models.feature_extractor.spectrogram import SpecFeatureExtractor
 from src.models.spec1D import Spec1D
 from src.models.spec2Dcnn import Spec2DCNN
 
 FEATURE_EXTRACTOR_TYPE = Union[
-    CNNSpectrogram, PANNsFeatureExtractor, LSTMFeatureExtractor, SpecFeatureExtractor
+    CNNSpectrogram, PANNsFeatureExtractor, LSTMFeatureExtractor, SpecFeatureExtractor, LSTMConvFeatureExtractor
 ]
 DECODER_TYPE = Union[
     UNet1DDecoder, LSTMDecoder, TransformerDecoder, MLPDecoder, TransformerCNNDecoder
@@ -40,6 +41,10 @@ def get_feature_extractor(
         )
     elif cfg.name == "LSTMFeatureExtractor":
         feature_extractor = LSTMFeatureExtractor(
+            in_channels=feature_dim, out_size=num_timesteps, **cfg.params
+        )
+    elif cfg.name == "LSTMConvFeatureExtractor":
+        feature_extractor = LSTMConvFeatureExtractor(
             in_channels=feature_dim, out_size=num_timesteps, **cfg.params
         )
     elif cfg.name == "SpecFeatureExtractor":
