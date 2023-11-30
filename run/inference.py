@@ -179,6 +179,9 @@ def main(cfg: InferenceConfig):
         model4 = load_model(cfg, '/kaggle/input/models-pth-files/lstm_6Feat_8hours_kfold4.pth')
 
         cfg.duration = 8640
+        cfg.feature_extractor.params['hidden_size'] = 64
+        cfg.feature_extractor.params['num_layers'] = 2
+
         model5 = load_model(cfg, '/kaggle/input/models-pth-files/lstm_12hr_6f_kfold1.pth')
         model6 = load_model(cfg, '/kaggle/input/models-pth-files/lstm_12hr_6f_kfold2.pth')
         model7 = load_model(cfg, '/kaggle/input/models-pth-files/lstm_12hr_6f_kfold3.pth')
