@@ -118,7 +118,7 @@ def inference(
     duration: int, loaders, models, device: torch.device, use_amp
 ) -> tuple[list[str], np.ndarray]:
     preds_accumulated = None
-    for loader, model in zip(models, loaders):
+    for loader, model in zip(loaders, models):
         model = model.to(device)
         model.eval()
 
