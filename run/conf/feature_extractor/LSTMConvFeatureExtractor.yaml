@@ -1,4 +1,4 @@
-name: LSTMFeatureExtractor
+name: LSTMConvFeatureExtractor
 params:
   hidden_size: 128
   num_layers: 4
