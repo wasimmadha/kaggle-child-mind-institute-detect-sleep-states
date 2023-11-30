@@ -174,19 +174,19 @@ def main(cfg: InferenceConfig):
         ## 8 hours
         model1 = load_model(cfg, '/kaggle/input/models-pth-files/lstm_6Feat_8hours_kfold1.pth')
         model2 = load_model(cfg, '/kaggle/input/models-pth-files/lstm_6Feat_8hours_kfold2.pth')
-        model3 = load_model(cfg, '/kaggle/input/models-pth-files/lstm_6Feat_8hours_kfold3.pth')
-        model4 = load_model(cfg, '/kaggle/input/models-pth-files/lstm_6Feat_8hours_kfold4.pth')
+        # model3 = load_model(cfg, '/kaggle/input/models-pth-files/lstm_6Feat_8hours_kfold3.pth')
+        # model4 = load_model(cfg, '/kaggle/input/models-pth-files/lstm_6Feat_8hours_kfold4.pth')
 
         cfg.duration = 8640
         print(cfg.feature_extractor)
-        cfg.feature_extractor = OmegaConf.load(r'/kaggle/working/kaggle-child-mind-institute-detect-sleep-states/run/conf/feature_extractor/LSTMConvFeatureExtractor.yaml')
+        cfg.feature_extractor = OmegaConf.load(r'/kaggle/input/updated-dss-code/kaggle-child-mind-institute-detect-sleep-states/run/conf/feature_extractor/LSTMConvFeatureExtractor.yaml')
         print(cfg.feature_extractor)
         cfg.feature_extractor.params['hidden_size'] = 64
         cfg.feature_extractor.params['num_layers'] = 2
         cfg.feature_extractor.params['stride'] = cfg.downsample_rate
         
-        model5 = load_model(cfg, '/kaggle/input/models-pth-files/lstm_12hr_6f_kfold1.pth')
-        model6 = load_model(cfg, '/kaggle/input/models-pth-files/lstm_12hr_6f_kfold2.pth')
+        # model5 = load_model(cfg, '/kaggle/input/models-pth-files/lstm_12hr_6f_kfold1.pth')
+        # model6 = load_model(cfg, '/kaggle/input/models-pth-files/lstm_12hr_6f_kfold2.pth')
         model7 = load_model(cfg, '/kaggle/input/models-pth-files/lstm_12hr_6f_kfold3.pth')
         model8 = load_model(cfg, '/kaggle/input/models-pth-files/lstm_12hr_6f_kfold4.pth')
 
@@ -195,7 +195,7 @@ def main(cfg: InferenceConfig):
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     
-    models = [model1, model2, model3, model4, model5, model6, model7, model8]
+    models = [model1, model2, model7, model8]
     with trace("inference"):
         keys, preds = inference(cfg.duration, test_dataloader, models, device, use_amp=cfg.use_amp)
 
