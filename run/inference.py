@@ -174,8 +174,8 @@ def main(cfg: InferenceConfig):
         ## 8 hours
         model1 = load_model(cfg, '/kaggle/input/models-pth-files/lstm_6Feat_8hours_kfold1.pth')
         model2 = load_model(cfg, '/kaggle/input/models-pth-files/lstm_6Feat_8hours_kfold2.pth')
-        # model3 = load_model(cfg, '/kaggle/input/models-pth-files/lstm_6Feat_8hours_kfold3.pth')
-        # model4 = load_model(cfg, '/kaggle/input/models-pth-files/lstm_6Feat_8hours_kfold4.pth')
+        model3 = load_model(cfg, '/kaggle/input/models-pth-files/lstm_6Feat_8hours_kfold3.pth')
+        model4 = load_model(cfg, '/kaggle/input/models-pth-files/lstm_6Feat_8hours_kfold4.pth')
 
         cfg.duration = 8640
         print(cfg.feature_extractor)
@@ -185,8 +185,8 @@ def main(cfg: InferenceConfig):
         cfg.feature_extractor.params['num_layers'] = 2
         cfg.feature_extractor.params['stride'] = cfg.downsample_rate
         
-        # model5 = load_model(cfg, '/kaggle/input/models-pth-files/lstm_12hr_6f_kfold1.pth')
-        # model6 = load_model(cfg, '/kaggle/input/models-pth-files/lstm_12hr_6f_kfold2.pth')
+        model5 = load_model(cfg, '/kaggle/input/models-pth-files/lstm_12hr_6f_kfold1.pth')
+        model6 = load_model(cfg, '/kaggle/input/models-pth-files/lstm_12hr_6f_kfold2.pth')
         model7 = load_model(cfg, '/kaggle/input/models-pth-files/lstm_12hr_6f_kfold3.pth')
         model8 = load_model(cfg, '/kaggle/input/models-pth-files/lstm_12hr_6f_kfold4.pth')
 
