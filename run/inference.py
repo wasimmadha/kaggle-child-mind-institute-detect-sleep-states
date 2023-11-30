@@ -181,7 +181,7 @@ def main(cfg: InferenceConfig):
 
         cfg.duration = 8640
         print(cfg.feature_extractor)
-        cfg.feature_extractor = OmegaConf.load('C:\Users\xelpmoc\Projects\DSS\kaggle-child-mind-institute-detect-sleep-states\run\conf\feature_extractor\LSTMConvFeatureExtractor.yaml')
+        cfg.feature_extractor = OmegaConf.load(r'/kaggle/working/kaggle-child-mind-institute-detect-sleep-states/run/conf/feature_extractor/LSTMConvFeatureExtractor.yaml')
         print(cfg.feature_extractor)
         cfg.feature_extractor.params['hidden_size'] = 64
         cfg.feature_extractor.params['num_layers'] = 2
