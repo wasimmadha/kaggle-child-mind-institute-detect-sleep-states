@@ -195,7 +195,7 @@ def main(cfg: InferenceConfig):
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     
-    models = [model1, model2, model7, model8]
+    models = [model1, model2, model3, model4, model5, model6, model7, model8]
     with trace("inference"):
         keys, preds = inference(cfg.duration, test_dataloader, models, device, use_amp=cfg.use_amp)
 
