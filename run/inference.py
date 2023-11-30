@@ -169,14 +169,14 @@ def main(cfg: InferenceConfig):
     with trace("load test dataloader"):
         test_dataloader = get_test_dataloader(cfg)
     with trace("load model"):
-        model1 = load_model(cfg, '/kaggle/input/models-pth-files/LSTM_128_4_12hr_score_kfold4_V2.pth.pth')
-        model2 = load_model(cfg, '/kaggle/input/models-pth-files/LSTM_128_4_12hr_score_kfold3_V2.pth.pth')
-        model3 = load_model(cfg, '/kaggle/input/models-pth-files/LSTM_128_4_12hr_score_kfold2_V2.pth.pth')
-        model4 = load_model(cfg, '/kaggle/input/models-pth-files/LSTM_128_4_12hr_score_kfold1_V2.pth.pth')
+        model1 = load_model(cfg, '/kaggle/input/models-pth-files/LSTM_128_4_12hr_loss_upp_kfold1.pth')
+        model2 = load_model(cfg, '/kaggle/input/models-pth-files/LSTM_128_4_12hr_loss_upp_kfold1.pth')
+        # model3 = load_model(cfg, '/kaggle/input/models-pth-files/LSTM_128_4_12hr_score_kfold2_V2.pth.pth')
+        # model4 = load_model(cfg, '/kaggle/input/models-pth-files/LSTM_128_4_12hr_score_kfold1_V2.pth.pth')
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     
-    models = [model1, model2, model3, model4]
+    models = [model1, model2]
     with trace("inference"):
         keys, preds = inference(cfg.duration, test_dataloader, models, device, use_amp=cfg.use_amp)
 
