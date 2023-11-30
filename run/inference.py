@@ -16,6 +16,7 @@ from src.models.common import get_model
 from src.utils.common import nearest_valid_size, trace
 from src.utils.post_process import post_process_for_seg
 
+from omegaconf import OmegaConf
 
 # def load_model(cfg: InferenceConfig) -> BaseModel:
 #     num_timesteps = nearest_valid_size(int(cfg.duration * cfg.upsample_rate), cfg.downsample_rate)
@@ -179,7 +180,9 @@ def main(cfg: InferenceConfig):
         model4 = load_model(cfg, '/kaggle/input/models-pth-files/lstm_6Feat_8hours_kfold4.pth')
 
         cfg.duration = 8640
-        cfg.feature_extractor = 'LSTMConvFeatureExtractor'
+        print(cfg.feature_extractor)
+        cfg.feature_extractor = OmegaConf.load('C:\Users\xelpmoc\Projects\DSS\kaggle-child-mind-institute-detect-sleep-states\run\conf\feature_extractor\LSTMConvFeatureExtractor.yaml')
+        print(cfg.feature_extractor)
         cfg.feature_extractor.params['hidden_size'] = 64
         cfg.feature_extractor.params['num_layers'] = 2
 
