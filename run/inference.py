@@ -179,10 +179,10 @@ def main(cfg: InferenceConfig):
         cfg.decoder = OmegaConf.load(r'/kaggle/input/updated-dss-code/kaggle-child-mind-institute-detect-sleep-states/run/conf/decoder/TransformerCNNDecoder.yaml')
         
         cfg.features = ['anglez', 'enmo', 'hour_sin', 'hour_cos']
-        # model5 = load_model(cfg, '/kaggle/input/models-pth-files/lstm_12hr_6f_kfold1.pth')
-        # model6 = load_model(cfg, '/kaggle/input/models-pth-files/lstm_12hr_6f_kfold2.pth')
-        model7 = load_model(cfg, '/kaggle/input/models-pth-files/transformerCNN_kfold1.pth')
-        model8 = load_model(cfg, '/kaggle/input/models-pth-files/transformerCNN_kfold1.pth')
+        model5 = load_model(cfg, '/kaggle/input/models-pth-files/transformerCNN_kfold1.pth')
+        model6 = load_model(cfg, '/kaggle/input/models-pth-files/transformerCNN_kfold2.pth')
+        # model7 = load_model(cfg, '/kaggle/input/models-pth-files/transformerCNN_kfold1.pth')
+        # model8 = load_model(cfg, '/kaggle/input/models-pth-files/transformerCNN_kfold1.pth')
 
     with trace("load test dataloader"):
         test_dataloader = get_test_dataloader(cfg)
