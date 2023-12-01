@@ -22,7 +22,7 @@ seed: 42
 exp_name: dummy
 batch_size: 32
 num_workers: 24
-duration: 8640 # duration * 5 = 秒数
+duration: 5760 # duration * 5 = 秒数
 downsample_rate: 2
 upsample_rate: 1
 
@@ -65,8 +65,8 @@ features:
   - "hour_cos"
   # - "minute_sin"
   # - "minute_cos"
-  # - "anglez_sin"
-  # - "anglez_cos"
+  - "anglez_sin"
+  - "anglez_cos"
 
 # optimizer
 optimizer:
