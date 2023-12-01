@@ -199,7 +199,7 @@ def main(cfg: InferenceConfig):
     keys, preds1 = inference(cfg.duration, test_dataloader1, models1, device, use_amp=cfg.use_amp)
     keys, preds2 = inference(cfg.duration, test_dataloader2, models2, device, use_amp=cfg.use_amp)
 
-    preds = (preds1 * 0.7) + (preds2 * 0.3)
+    preds = (preds1 * 0.75) + (preds2 * 0.25)
     
     with trace("make submission"):
         sub_df = make_submission(
