@@ -170,8 +170,8 @@ def main(cfg: InferenceConfig):
     with trace("load model1"):
         model1 = load_model(cfg, '/kaggle/input/models-pth-files/lstm_6Feat_8hours_kfold1.pth')
         model2 = load_model(cfg, '/kaggle/input/models-pth-files/lstm_6Feat_8hours_kfold2.pth')
-        # model3 = load_model(cfg, '/kaggle/input/models-pth-files/lstm_6Feat_8hours_kfold3.pth')
-        # model4 = load_model(cfg, '/kaggle/input/models-pth-files/lstm_6Feat_8hours_kfold4.pth')
+        model3 = load_model(cfg, '/kaggle/input/models-pth-files/lstm_6Feat_8hours_kfold3.pth')
+        model4 = load_model(cfg, '/kaggle/input/models-pth-files/lstm_6Feat_8hours_kfold4.pth')
 
     with trace("load test dataloader"):
         test_dataloader1 = get_test_dataloader(cfg)
@@ -185,16 +185,16 @@ def main(cfg: InferenceConfig):
         cfg.features = ['anglez', 'enmo', 'hour_sin', 'hour_cos']
         model5 = load_model(cfg, '/kaggle/input/models-pth-files/transformerCNN_kfold1.pth')
         model6 = load_model(cfg, '/kaggle/input/models-pth-files/transformerCNN_kfold2.pth')
-        # model7 = load_model(cfg, '/kaggle/input/models-pth-files/transformerCNN_kfold1.pth')
-        # model8 = load_model(cfg, '/kaggle/input/models-pth-files/transformerCNN_kfold1.pth')
+        model7 = load_model(cfg, '/kaggle/input/models-pth-files/transformerCNN_kfold1.pth')
+        model8 = load_model(cfg, '/kaggle/input/models-pth-files/transformerCNN_kfold1.pth')
 
     with trace("load test dataloader"):
         test_dataloader2 = get_test_dataloader(cfg)
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     
-    models = [model1, model2, model5, model6]
-    dataloaders = [test_dataloader1, test_dataloader1, test_dataloader2, test_dataloader2]
+    models = [model1, model2, model3, model4, model5, model6, model7, model8]
+    dataloaders = [test_dataloader1, test_dataloader1, test_dataloader1, test_dataloader1, test_dataloader2, test_dataloader2, test_dataloader2, test_dataloader2]
     with trace("inference"):
         keys, preds = inference(cfg.duration, dataloaders, models, device, use_amp=cfg.use_amp)
 
