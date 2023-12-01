@@ -115,10 +115,10 @@ def get_test_dataloader(cfg: InferenceConfig) -> DataLoader:
 #     return keys, preds  # type: ignore
 
 def inference(
-    duration: int, loader: DataLoader, models: BaseModel, device: torch.device, use_amp
+    duration: int, loaders, models: BaseModel, device: torch.device, use_amp
 ) -> tuple[list[str], np.ndarray]:
     preds_accumulated = None
-    for model in models:
+    for model, loader in zip(models, loaders):
         model = model.to(device)
         model.eval()
 
@@ -167,12 +167,16 @@ def make_submission(
 def main(cfg: InferenceConfig):
     seed_everything(cfg.seed)
 
-    with trace("load model"):
+    with trace("load model1"):
         model1 = load_model(cfg, '/kaggle/input/models-pth-files/lstm_6Feat_8hours_kfold1.pth')
         model2 = load_model(cfg, '/kaggle/input/models-pth-files/lstm_6Feat_8hours_kfold2.pth')
         # model3 = load_model(cfg, '/kaggle/input/models-pth-files/lstm_6Feat_8hours_kfold3.pth')
         # model4 = load_model(cfg, '/kaggle/input/models-pth-files/lstm_6Feat_8hours_kfold4.pth')
 
+    with trace("load test dataloader"):
+        test_dataloader1 = get_test_dataloader(cfg)
+
+    with trace("load model2"):
         ## Feature Extractor 
         cfg.feature_extractor = OmegaConf.load(r'/kaggle/input/updated-dss-code/kaggle-child-mind-institute-detect-sleep-states/run/conf/feature_extractor/CNNSpectrogram.yaml')
         ## Decoder 
@@ -185,13 +189,14 @@ def main(cfg: InferenceConfig):
         # model8 = load_model(cfg, '/kaggle/input/models-pth-files/transformerCNN_kfold1.pth')
 
     with trace("load test dataloader"):
-        test_dataloader = get_test_dataloader(cfg)
+        test_dataloader2 = get_test_dataloader(cfg)
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     
     models = [model1, model2, model5, model6]
+    dataloaders = [test_dataloader1, test_dataloader1, test_dataloader2, test_dataloader2]
     with trace("inference"):
-        keys, preds = inference(cfg.duration, test_dataloader, models, device, use_amp=cfg.use_amp)
+        keys, preds = inference(cfg.duration, dataloaders, models, device, use_amp=cfg.use_amp)
 
     with trace("make submission"):
         sub_df = make_submission(
