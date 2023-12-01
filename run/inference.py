@@ -115,10 +115,10 @@ def get_test_dataloader(cfg: InferenceConfig) -> DataLoader:
 #     return keys, preds  # type: ignore
 
 def inference(
-    duration: int, loaders, models: BaseModel, device: torch.device, use_amp
+    duration: int, loader, models: BaseModel, device: torch.device, use_amp
 ) -> tuple[list[str], np.ndarray]:
     preds_accumulated = None
-    for model, loader in zip(models, loaders):
+    for model, loader in models:
         model = model.to(device)
         model.eval()
 
@@ -193,11 +193,14 @@ def main(cfg: InferenceConfig):
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     
-    models = [model1, model2, model3, model4, model5, model6, model7, model8]
-    dataloaders = [test_dataloader1, test_dataloader1, test_dataloader1, test_dataloader1, test_dataloader2, test_dataloader2, test_dataloader2, test_dataloader2]
-    with trace("inference"):
-        keys, preds = inference(cfg.duration, dataloaders, models, device, use_amp=cfg.use_amp)
+    models1 = [model1, model2, model3, model4]
+    models2 = [model5, model6, model7, model8]
 
+    keys, preds1 = inference(cfg.duration, test_dataloader1, models1, device, use_amp=cfg.use_amp)
+    keys, preds2 = inference(cfg.duration, test_dataloader2, models2, device, use_amp=cfg.use_amp)
+
+    preds = (preds1 * 0.7) + (preds2 * 0.3)
+    
     with trace("make submission"):
         sub_df = make_submission(
             keys,
