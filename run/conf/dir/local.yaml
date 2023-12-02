@@ -1,5 +1,5 @@
 data_dir: /content/data
 processed_dir: /content/processed_data
-output_dir: /content/drive/MyDrive/Projects/DSS/lstmFeature12Hours/output
-model_dir: /content/drive/MyDrive/Projects/DSS/lstmFeature12Hours/train
+output_dir: /content/drive/MyDrive/Projects/DSS/lstmFeature8hours/output
+model_dir: /content/drive/MyDrive/Projects/DSS/lstmFeature8hours/output/train
 sub_dir: /content/
