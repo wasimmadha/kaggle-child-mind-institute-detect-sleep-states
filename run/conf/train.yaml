@@ -15,14 +15,14 @@ defaults:
   - dataset: seg
   - model: Spec2DCNN
   - feature_extractor: LSTMFeatureExtractor
-  - decoder: UNet1DDecoder
+  - decoder: TransformerCNNDecoder
   - split: fold_0
 
 seed: 42
 exp_name: dummy
 batch_size: 32
 num_workers: 24
-duration: 5760 # duration * 5 = 秒数
+duration: 8640 # duration * 5 = 秒数
 downsample_rate: 2
 upsample_rate: 1
 

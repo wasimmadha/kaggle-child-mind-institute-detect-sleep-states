@@ -16,6 +16,7 @@ from src.conf import TrainConfig
 from src.datamodule import SleepDataModule
 from src.modelmodule import PLSleepModel
 
+import os
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(levelname)s:%(name)s - %(message)s"
 )
@@ -74,6 +75,9 @@ def main(cfg: TrainConfig):
     )
 
     trainer.fit(model, datamodule=datamodule)
+
+    weights_path = os.path.join(cfg.dir.model_dir, str("model_weights.pth"))  # type: ignore
+    LOGGER.info(f"Extracting and saving best weights: {weights_path}")
 
     # load best weights
     model = model.load_from_checkpoint(
