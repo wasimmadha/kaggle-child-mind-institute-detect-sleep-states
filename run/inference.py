@@ -168,10 +168,10 @@ def main(cfg: InferenceConfig):
     seed_everything(cfg.seed)
 
     with trace("load model1"):
-        model1 = load_model(cfg, '/kaggle/input/models-pth-files/kfold_1_score_upp.pth')
-        model2 = load_model(cfg, '/kaggle/input/models-pth-files/kfold_2_score_upp.pth')
-        model3 = load_model(cfg, '/kaggle/input/models-pth-files/kfold_3_score_upp.pth')
-        model4 = load_model(cfg, '/kaggle/input/models-pth-files/kfold_4_score_upp.pth')
+        model1 = load_model(cfg, '/kaggle/input/models-pth-files/lstm128_4_8hours_sigma200_score_kfold1.pth')
+        model2 = load_model(cfg, '/kaggle/input/models-pth-files/lstm128_4_8hours_sigma200_score_kfold2.pth')
+        model3 = load_model(cfg, '/kaggle/input/models-pth-files/lstm128_4_8hours_sigma200_score_kfold3.pth')
+        model4 = load_model(cfg, '/kaggle/input/models-pth-files/lstm128_4_8hours_sigma200_score_kfold4.pth')
         # model6 = load_model(cfg, '/kaggle/input/models-pth-files/lstm_6Feat_8hours_score_kfold2.pth')
         # model7 = load_model(cfg, '/kaggle/input/models-pth-files/lstm_6Feat_8hours_score_kfold3.pth')
         # model8 = load_model(cfg, '/kaggle/input/models-pth-files/lstm_6Feat_8hours_score_kfold4.pth')
